@@ -25,9 +25,13 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={`${roboto.className}`}>
-                <ThemeProvider> {/* Provides the dark/light next js theming for the web page */}
-                    <noscript>You need to enable JavaScript to run this app.</noscript>
-                    <div id="root">{children}</div>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
                 </ThemeProvider>
             </body>
         </html>

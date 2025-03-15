@@ -10,6 +10,19 @@ import { Thermometer } from "lucide-react"
 import Numeric from "../components/custom/numeric"
 import RedbackLogoDarkMode from "../../public/logo-darkmode.svg"
 import RedbackLogoLightMode from "../../public/logo-lightmode.svg"
+import { ModeToggle } from "@/components/ui/mode-toggle"
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
+
+// import * as React from "react"
+// import { Moon, Sun } from "lucide-react"
+ 
+// import { Button } from "@/components/ui/button"
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu"
 
 const WS_URL = "ws://localhost:8080"
 
@@ -25,9 +38,11 @@ interface VehicleData {
  * @returns {JSX.Element} The rendered page component.
  */
 export default function Page(): JSX.Element {
-  const { setTheme } = useTheme()
+  const { theme } = useTheme()
   const [temperature, setTemperature] = useState<any>(0)
   const [connectionStatus, setConnectionStatus] = useState<string>("Disconnected")
+  // const [temperatureHistory, setTemperatureHistory] = useState<
+  // console.log("ReadState", ReadyState);
   const { lastJsonMessage, readyState }: { lastJsonMessage: VehicleData | null; readyState: ReadyState } = useWebSocket(
     WS_URL,
     {
@@ -35,6 +50,7 @@ export default function Page(): JSX.Element {
       shouldReconnect: () => true,
     },
   )
+  // console.log("ReadState2", readyState);
 
   /**
    * Effect hook to handle WebSocket connection state changes.
@@ -56,7 +72,7 @@ export default function Page(): JSX.Element {
         setConnectionStatus("Disconnected")
         break
     }
-  }, [])
+  });
 
   /**
    * Effect hook to handle incoming WebSocket messages.
@@ -67,20 +83,25 @@ export default function Page(): JSX.Element {
       return
     }
     setTemperature(lastJsonMessage.battery_temperature)
+
+    // setTemperatureHistory((prev) => [
+    //   ...prev.slice(-19),
+
+    // ])
   }, [lastJsonMessage])
 
   /**
    * Effect hook to set the theme to dark mode.
    */
-  useEffect(() => {
-    setTheme("dark")
-  }, [setTheme])
+  // useEffect(() => {
+  //   setTheme("dark")
+  // }, [setTheme])
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-5 h-20 flex items-center gap-5 border-b">
         <Image
-          src={RedbackLogoDarkMode}
+          src={theme === "dark" ? RedbackLogoDarkMode : RedbackLogoLightMode} 
           className="h-12 w-auto"
           alt="Redback Racing Logo"
         />
@@ -88,13 +109,14 @@ export default function Page(): JSX.Element {
         <Badge variant={connectionStatus === "Connected" ? "success" : "destructive"} className="ml-auto">
           {connectionStatus}
         </Badge>
+        <ModeToggle />
       </header>
       <main className="flex-grow flex items-center justify-center p-8">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl font-light flex items-center gap-2">
               <Thermometer className="h-6 w-6" />
-              Live Battery Temperature
+              Live Battery Temperature - James
             </CardTitle>
           </CardHeader>
           <CardContent className="flex items-center justify-center">
@@ -105,3 +127,4 @@ export default function Page(): JSX.Element {
     </div>
   )
 }
+

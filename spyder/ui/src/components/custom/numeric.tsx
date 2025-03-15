@@ -15,13 +15,30 @@ function Numeric({ temp }: TemperatureProps) {
   //  - (or) Use the div's style prop to change the colour
   //  - (or) other solution
 
-  // Justify your choice of implementation in brainstorming.md
+  if (temp > 25 &&  temp < 75 ) {
+    return (
+      <div className="text-foreground text-4xl font-bold text-lime-500">
+        {`${temp}°C`}
+      </div>
+    );
+  }
+  else if ((temp >= 20 && temp <= 25) || (temp >= 75 && temp <= 80)) {
+    return (
+      <div className="text-foreground text-4xl font-bold text-yellow-400">
+        {`${temp}°C`}
+      </div>
+    );
+  }
+  else {
+    return (
+      <div className="text-foreground text-4xl font-bold text-red-600">
+        {`${temp}°C`}
+      </div>
+    );
+  }
+  
 
-  return (
-    <div className="text-foreground text-4xl font-bold">
-      {`${temp}°C`}
-    </div>
-  );
+  // Justify your choice of implementation in brainstorming.md
 }
 
 export default Numeric;
