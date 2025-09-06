@@ -20,10 +20,6 @@ tcpServer.on("connection", (socket) => {
     const message: string = msg.toString();
 
     const data: VehicleData = JSON.parse(message);
-    if (!Number.isFinite(data.battery_temperature) || !Number.isFinite(data.timestamp)) {
-      console.log('Error: Invalid temperature');
-      return;
-    }
     const batteryTemperature = Number(Number(data.battery_temperature).toFixed(3))
     data.battery_temperature = batteryTemperature;
     if (batteryTemperature < 20 || batteryTemperature > 80) {
@@ -32,11 +28,15 @@ tcpServer.on("connection", (socket) => {
         timestamp: data.timestamp
       });
     }
+
+    if (!Number.isFinite(data.battery_temperature) || !Number.isFinite(data.timestamp)) {
+      data.battery_temperature = 'Error: Invalid temperature'
+    }
+    
     const unsafeTemperatures = unsafeTemperature.filter((temperature) => data.timestamp - temperature.timestamp < 5000);
     if (unsafeTemperatures.length > 3) {
-      console.log(data.timestamp);
-      console.log('Error: Battery is outside the safe operating range');
-      return;
+      // console.log(data.timestamp);
+      data.battery_temperature = 'Error: Battery is outside the safe operating range'
     }
     
     console.log(`Received: ${JSON.stringify(data)}`);

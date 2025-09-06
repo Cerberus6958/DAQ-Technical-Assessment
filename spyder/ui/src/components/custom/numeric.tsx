@@ -14,6 +14,15 @@ function Numeric({ temp }: TemperatureProps) {
   //  - Consider using cn() from the utils folder for conditional tailwind styling
   //  - (or) Use the div's style prop to change the colour
   //  - (or) other solution
+  const regex = new RegExp('^Error')
+  const isValidTemperature = regex.test(temp)
+  if (isValidTemperature || temp == '-') {
+    return (
+      <div className="text-foreground text-2xl font-bold text-red-600">
+        {`${temp}`}
+      </div>
+    )
+  }
 
   if (temp > 25 &&  temp < 75 ) {
     return (
